@@ -1,13 +1,14 @@
 import torch
 import numpy as np
 from kernelmatrix import kernelmatrix
-
+from helps.kernel import kernel
+# from helps.calcMCMC import calcMCMC 
 
 def load_matfile(file_name):
     return np.load(file_name, allow_pickle=True)
 
 def get_tensor(var, key, dtype=True):
-    return torch.from_numpy(var.item().get(key).astype('float64')) if dtype else torch.from_numpy(var.item().get(key))
+    return torch.from_numpy((var.item().get(key)-1).astype('float64')) if dtype else torch.from_numpy(var.item().get(key))
 
 # TODO rewrite later in more sensible and logical way.
 def ret_logical(shape):
@@ -47,4 +48,11 @@ if __name__ == "__main__":
     D = torch.cat((first_ind[:, torch.logical_not(matches)], second_ind[:, torch.logical_not(matches)])) # cannot-link constraints
     
     K  = kernelmatrix(X=X, X2=torch.tensor([]), sigma=sigma);       
-    print(K)
+    # print(K)
+
+    M = kernel(EPS,S,D,K,1); # learn k-KISSME
+    print(torch.diagonal(M)[1:100])
+    # END k-kissme
+
+    # test rank-1 matching rate
+    # cmc{1} = calcMCMC(torch.eye(d), X, idxa, idxb, idxtest)

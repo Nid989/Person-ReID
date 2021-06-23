@@ -1,4 +1,5 @@
 from numpy.core.fromnumeric import shape
+from numpy.lib.format import header_data_from_array_1_0
 from helps.projectPSD import projectPSD
 from computeH import computeH
 import torch
@@ -21,6 +22,7 @@ def kernel(e, S, D, K, pmetric):
     H0 = computeH(n, D[0, :], D[1, :])
     H1 = computeH(n, S[0, :], S[1, :])
     C = computeT(n0, e, H0, K)-computeT(n1, e, H1, K)
+
     if pmetric:
         C = projectPSD(C)
 
@@ -28,7 +30,9 @@ def kernel(e, S, D, K, pmetric):
 
 def computeT(n, e, H, K):
     # compute the inverse of (eI + (1-e))
-    t = (torch.eye(K.shape[0]) + (1/(n*e))*K*H)
-    Z = torch.matmul(H, torch.inverse(t))
-    I = (1/(n*e**2))*Z
+    # TODO problem might be in t [specifically 2nd part] or rather in inverse maybe even last part
+    t = torch.eye(K.shape[0]) + (1/(n*e))*torch.matmul(K.double(), H.double()) 
+    Z = torch.inverse(t)
+    scalar = (1/(n*e**2))
+    I = scalar * torch.matmul(H.double(), Z)
     return I
