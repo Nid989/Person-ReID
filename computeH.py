@@ -23,7 +23,7 @@ def computeH(n, ib, ie):
     B = torch.diag(B.view(n))
     E = torch.diag(E.view(n))
 
-    Calc_W(ib, ie, W)
+    W = Calc_W(ib, ie, W)
 
     # H = B - W.T - W + E
     H = B + E - W.T - W
@@ -31,5 +31,8 @@ def computeH(n, ib, ie):
     return H
 
 def Calc_W(ib, ie, W):
+
     for i in range(0, ib.shape[0]):
         W[ib[i], ie[i]] = W[ib[i], ie[i]] + 1
+        
+    return W

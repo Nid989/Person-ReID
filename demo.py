@@ -64,4 +64,4 @@ if __name__ == "__main__":
 
     s = idxtest.shape[0]
     print('Rank-1 matching rate:\n')
-    print('IDENTITY = {0}\nk-KISSME ={1}\n'.format(100*cmc[:, 1]/s, 100*cmc_[:, 1]/s))
+    print('IDENTITY = {0}\nk-KISSME = {1}\n'.format(100*cmc[:, 1]/s, 100*cmc_[:, 1]/s))
