@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from kernelmatrix import kernelmatrix
 from helps.kernel import kernel
-# from helps.calcMCMC import calcMCMC 
+from helps.calcMCMC import calcMCMC 
 
 def load_matfile(file_name):
     return np.load(file_name, allow_pickle=True)
@@ -17,7 +17,7 @@ def ret_logical(shape):
     return torch.logical_and(temp_a, temp_b)
     
 def change_view(tensor):
-    return tensor.view(1, tensor.shape[0])
+    return tensor.view(1, tensor.shape[0])  
 
 if __name__ == "__main__":
     
@@ -51,8 +51,17 @@ if __name__ == "__main__":
     # print(K)
 
     M = kernel(EPS,S,D,K,1); # learn k-KISSME
-    print(torch.diagonal(M)[1:100])
+    # print(torch.diagonal(M)[0:100])
     # END k-kissme
 
+    idxa = idxa.type(torch.int64).T
+    idxb = idxb.type(torch.int64).T
+
     # test rank-1 matching rate
-    # cmc{1} = calcMCMC(torch.eye(d), X, idxa, idxb, idxtest)
+    cmc = calcMCMC(torch.eye(d), X, idxa, idxb, idxtest)
+    cmc_ = calcMCMC(M, K, idxa, idxb, idxtest)
+    
+
+    s = idxtest.shape[0]
+    print('Rank-1 matching rate:\n')
+    print('IDENTITY = {0}\nk-KISSME ={1}\n'.format(100*cmc[:, 1]/s, 100*cmc_[:, 1]/s))
