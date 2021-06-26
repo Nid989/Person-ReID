@@ -51,7 +51,9 @@ if __name__ == "__main__":
     # print(K)
 
     M = kernel(EPS,S,D,K,1); # learn k-KISSME
+    # print(M.shape)
     # print(torch.diagonal(M)[0:100])
+    M = torch.from_numpy(M)
     # END k-kissme
 
     idxa = idxa.type(torch.int64).T
@@ -65,3 +67,5 @@ if __name__ == "__main__":
     s = idxtest.shape[0]
     print('Rank-1 matching rate:\n')
     print('IDENTITY = {0}\nk-KISSME = {1}\n'.format(100*cmc[:, 1]/s, 100*cmc_[:, 1]/s))
+    # print(cmc[:, 1]/s, cmc[:, 1], cmc_[:, 1]/s, cmc_[:, 2])
+    print(cmc_)
