@@ -19,7 +19,7 @@ def mahalanobis_dist(p, q, A):
     pmag = torch.sum(p*Ap, 0, keepdim=True).double()
     qmag = torch.sum(q*Aq, 0, keepdim=True).double()
 
-    m = torch.mm(torch.ones(pn, 1).double(), qmag) + torch.mm(pmag.T, torch.ones(1, qn).double()) - 2 * torch.mm(p.T, q)
+    m = torch.mm(torch.ones(pn, 1).double(), qmag) + torch.mm(pmag.T, torch.ones(1, qn).double()) - 2 * torch.mm(p.T, Aq)
 
     return m
 

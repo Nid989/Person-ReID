@@ -1,3 +1,4 @@
+from helps.projectPSD import projectPSD
 import torch
 import numpy as np
 from kernelmatrix import kernelmatrix
@@ -47,25 +48,20 @@ if __name__ == "__main__":
     S = torch.cat((first_ind[:, matches], second_ind[:, matches])) # must-link constraints
     D = torch.cat((first_ind[:, torch.logical_not(matches)], second_ind[:, torch.logical_not(matches)])) # cannot-link constraints
     
-    K  = kernelmatrix(X=X, X2=torch.tensor([]), sigma=sigma);       
-    # print(K)
+    K  = kernelmatrix(X=X, X2=torch.tensor([]), sigma=sigma); # computeK the kernel matrix    
 
     M = kernel(EPS,S,D,K,1); # learn k-KISSME
-    # print(M.shape)
-    # print(torch.diagonal(M)[0:100])
     M = torch.from_numpy(M)
+
     # END k-kissme
 
-    idxa = idxa.type(torch.int64).T
-    idxb = idxb.type(torch.int64).T
+    idxa = idxa.type(torch.int64).view(N)
+    idxb = idxb.type(torch.int64).view(N)
 
     # test rank-1 matching rate
     cmc = calcMCMC(torch.eye(d), X, idxa, idxb, idxtest)
     cmc_ = calcMCMC(M, K, idxa, idxb, idxtest)
-    
 
     s = idxtest.shape[0]
     print('Rank-1 matching rate:\n')
     print('IDENTITY = {0}\nk-KISSME = {1}\n'.format(100*cmc[:, 1]/s, 100*cmc_[:, 1]/s))
-    # print(cmc[:, 1]/s, cmc[:, 1], cmc_[:, 1]/s, cmc_[:, 2])
-    print(cmc_)

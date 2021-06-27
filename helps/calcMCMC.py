@@ -4,9 +4,9 @@ from helps.sqdist import mahalanobis_dist, sqdist
 def calcMCMC(M, data, idxa, idxb, idxtest):
     
     p = data[:, idxa[idxtest]]
-    p = p.view(p.shape[0], -1)
+    # p = p.view(p.shape[0], -1)
     q = data[:, idxb[idxtest]]
-    q = q.view(q.shape[0], -1)    
+    # q = q.view(q.shape[0], -1)    
     dist = mahalanobis_dist(p, q, M)
 
     tmp = 0
@@ -16,9 +16,9 @@ def calcMCMC(M, data, idxa, idxb, idxtest):
         tmp, idx = torch.sort(distPair)
         result[:, idx==pairCounter] = result[:, idx==pairCounter] + 1
 
-    # tmp = 0
-    # for counter in range(1, result.shape[0]):
-    #     result[:, counter] = result[:, counter] + tmp
-    #     tmp = result[:, counter]
+    tmp = 0
+    for counter in range(0, result.shape[1]):
+        result[:, counter] = result[:, counter] + tmp
+        tmp = result[:, counter]
             
     return result
