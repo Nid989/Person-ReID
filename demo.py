@@ -58,10 +58,18 @@ if __name__ == "__main__":
     idxa = idxa.type(torch.int64).view(N)
     idxb = idxb.type(torch.int64).view(N)
 
+    # Evaluation on train rank-1 matching rate
+    cmc_i = calcMCMC(torch.eye(d), X, idxa, idxb, idxtrain)
+    cmc_tr = calcMCMC(M, K, idxa, idxb, idxtrain)
+
+    s = idxtrain.shape[0]
+    print('Rank-1 matching rate:')
+    print('IDENTITY = {0}\nk-KISSME = {1}\n'.format(100*cmc_i[:, 1]/s, 100*cmc_tr[:, 1]/s))
+
     # test rank-1 matching rate
-    cmc = calcMCMC(torch.eye(d), X, idxa, idxb, idxtest)
-    cmc_ = calcMCMC(M, K, idxa, idxb, idxtest)
+    cmc_i = calcMCMC(torch.eye(d), X, idxa, idxb, idxtest)
+    cmc_ts = calcMCMC(M, K, idxa, idxb, idxtest)
 
     s = idxtest.shape[0]
-    print('Rank-1 matching rate:\n')
-    print('IDENTITY = {0}\nk-KISSME = {1}\n'.format(100*cmc[:, 1]/s, 100*cmc_[:, 1]/s))
+    print('Rank-1 matching rate:')
+    print('IDENTITY = {0}\nk-KISSME = {1}\n'.format(100*cmc_i[:, 1]/s, 100*cmc_ts[:, 1]/s))
